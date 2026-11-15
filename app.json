@@ -1,0 +1,68 @@
+{
+  "expo": {
+    "name": "TALITA-NG",
+    "slug": "talita-ng-mobile",
+    "scheme": "talitang",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "bundleIdentifier": "id.go.bps.lampung.talita",
+      "supportsTablet": false,
+      "infoPlist": {
+        "NSCameraUsageDescription": "Kamera dipakai untuk mengambil foto profil.",
+        "NSPhotoLibraryUsageDescription": "Galeri dipakai untuk memilih foto profil dan lampiran chat.",
+        "NSMicrophoneUsageDescription": "Mikrofon dipakai untuk mengetik pertanyaan chatbot dengan suara.",
+        "NSSpeechRecognitionUsageDescription": "Pengenalan suara mengubah ucapan Anda menjadi teks pertanyaan."
+      }
+    },
+    "android": {
+      "package": "id.go.bps.lampung.talita",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#C2410C"
+      },
+      "permissions": ["CAMERA", "RECORD_AUDIO", "POST_NOTIFICATIONS"],
+      "edgeToEdgeEnabled": true
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-font",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 180,
+          "backgroundColor": "#B91C1C"
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Galeri dipakai untuk memilih foto profil.",
+          "cameraPermission": "Kamera dipakai untuk mengambil foto profil."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "color": "#C2410C"
+        }
+      ],
+      [
+        "expo-speech-recognition",
+        {
+          "microphonePermission": "Mikrofon dipakai untuk mengetik pertanyaan dengan suara.",
+          "speechRecognitionPermission": "Pengenalan suara mengubah ucapan menjadi teks."
+        }
+      ],
+      "@react-native-community/datetimepicker"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
