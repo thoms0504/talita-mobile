@@ -111,7 +111,7 @@ export default function ChatbotScreen() {
       setMessages((m) =>
         m.map((x) =>
           x.id === botId
-            ? { ...x, pending: false, failed: !aborted, content: aborted ? x.content || '_Respons dihentikan._' : x.content || `⚠️ ${errorMessage(e, 'Gagal mendapatkan jawaban.')}` }
+            ? { ...x, pending: false, failed: !aborted, content: aborted ? x.content || '_Respons dihentikan._' : x.content || `⚠️ ${errorMessage(e, e?.message ? `Gagal mendapatkan jawaban (${e.message}).` : 'Gagal mendapatkan jawaban.')}` }
             : x,
         ),
       );
