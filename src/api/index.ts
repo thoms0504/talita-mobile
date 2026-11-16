@@ -134,7 +134,23 @@ export const chatApi = {
       const fresh = await refreshAccessToken();
       if (fresh) res = await doFetch(fresh);
     }
-    if (!res.ok) throw Object.assign(new Error(`HTTP ${res.status}`), { response: { status: res.status } });
+    if (!res.ok) {
+      let data: any;
+      try {
+        const raw = await res.text();
+        try {
+          data = JSON.parse(raw);
+        } catch {
+          data = { detail: raw.slice(0, 200) };
+        }
+      } catch {
+        /* body tidak terbaca */
+      }
+      if (__DEV__) console.warn(`[chat] POST /chat/sessions/${sessionId}/messages -> HTTP ${res.status}`, data);
+      const detail = data?.detail ?? data?.message;
+      const msg = typeof detail === 'string' && detail ? `${detail} (HTTP ${res.status})` : `Server menolak permintaan (HTTP ${res.status})`;
+      throw Object.assign(new Error(msg), { response: { status: res.status, data: { detail: msg } } });
+    }
 
     const ctype = res.headers.get('content-type') ?? '';
     if (ctype.includes('application/json')) {
