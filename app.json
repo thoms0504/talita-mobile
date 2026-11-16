@@ -24,8 +24,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#C2410C"
       },
-      "permissions": ["CAMERA", "RECORD_AUDIO", "POST_NOTIFICATIONS"],
-      "edgeToEdgeEnabled": true
+      "permissions": ["CAMERA", "RECORD_AUDIO", "POST_NOTIFICATIONS"]
     },
     "plugins": [
       "expo-router",
