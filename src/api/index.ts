@@ -123,10 +123,12 @@ export const chatApi = {
    */
   async sendStreaming(sessionId: number, content: string, onDelta: (text: string) => void, signal?: AbortSignal) {
     const doFetch = async (token: string | null) =>
-      expoFetch(`${API_BASE}/chat/sessions/${sessionId}/messages`, {
+      // Backend: GET /chat/sessions/{id}/messages hanya untuk membaca riwayat (POST → 405).
+      // Mengirim pertanyaan memakai POST /chat/message dengan session_id di body.
+      expoFetch(`${API_BASE}/chat/message`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'text/event-stream, text/plain, application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
-        body: JSON.stringify({ content, message: content }),
+        body: JSON.stringify({ message: content, content, session_id: sessionId, sessionId }),
         signal,
       });
     let res = await doFetch(await getAccessToken());
@@ -146,7 +148,7 @@ export const chatApi = {
       } catch {
         /* body tidak terbaca */
       }
-      if (__DEV__) console.warn(`[chat] POST /chat/sessions/${sessionId}/messages -> HTTP ${res.status}`, data);
+      if (__DEV__) console.warn(`[chat] POST /chat/message (session ${sessionId}) -> HTTP ${res.status}`, data);
       const detail = data?.detail ?? data?.message;
       const msg = typeof detail === 'string' && detail ? `${detail} (HTTP ${res.status})` : `Server menolak permintaan (HTTP ${res.status})`;
       throw Object.assign(new Error(msg), { response: { status: res.status, data: { detail: msg } } });
