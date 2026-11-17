@@ -20,23 +20,25 @@ Notifications.setNotificationHandler({
 
 export async function registerForPush(): Promise<string | null> {
   if (!Device.isDevice) return null;
-  if (Platform.OS === 'android') {
-    await Notifications.setNotificationChannelAsync('default', {
-      name: 'TALITA-NG',
-      importance: Notifications.AndroidImportance.HIGH,
-      lightColor: '#C2410C',
-    });
-  }
-  const existing = await Notifications.getPermissionsAsync();
-  let granted = existing.granted;
-  if (!granted && existing.canAskAgain) granted = (await Notifications.requestPermissionsAsync()).granted;
-  if (!granted) return null;
+  // Push bersifat opsional: kegagalan di sini (mis. Expo Go di Android tidak mendukung push,
+  // Firebase belum dikonfigurasi, atau backend belum punya endpoint) tidak boleh menjatuhkan app.
   try {
+    if (Platform.OS === 'android') {
+      await Notifications.setNotificationChannelAsync('default', {
+        name: 'TALITA-NG',
+        importance: Notifications.AndroidImportance.HIGH,
+        lightColor: '#C2410C',
+      });
+    }
+    const existing = await Notifications.getPermissionsAsync();
+    let granted = existing.granted;
+    if (!granted && existing.canAskAgain) granted = (await Notifications.requestPermissionsAsync()).granted;
+    if (!granted) return null;
     const token = await Notifications.getDevicePushTokenAsync();
     await authApi.registerPushToken(String(token.data), token.type);
     return String(token.data);
   } catch {
-    return null; // backend belum punya endpoint atau Firebase belum dikonfigurasi
+    return null;
   }
 }
 
